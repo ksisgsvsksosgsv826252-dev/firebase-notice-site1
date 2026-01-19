@@ -2,10 +2,20 @@
 <html>
 <head>
   <title>User Login/Register</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: Arial; max-width: 500px; margin: auto; padding: 20px; }
+    input, button, textarea { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; }
+    button { cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+    button:hover { background-color: #45a049; }
+    h2, h3 { text-align: center; }
+    #auth-buttons { text-align: center; margin-bottom: 10px; }
+    .error { color: red; font-weight: bold; }
+    .success { color: green; font-weight: bold; }
+  </style>
 </head>
 <body>
   <h2>Welcome</h2>
+
   <div id="auth-buttons">
     <button onclick="showLogin()">Login</button>
     <button onclick="showRegister()">Register</button>
@@ -16,6 +26,7 @@
     <input id="login-email" placeholder="Email">
     <input id="login-password" type="password" placeholder="Password">
     <button id="login-btn">Login</button>
+    <p id="login-msg"></p>
   </div>
 
   <div id="register-form" style="display:none">
@@ -25,12 +36,13 @@
     <input id="reg-email" placeholder="Email">
     <input id="reg-password" type="password" placeholder="Password">
     <button id="register-btn">Register</button>
+    <p id="reg-msg"></p>
   </div>
 
-<script type="module">
+  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCHArkRwUM24OTgFZ55C26Iqf2djHvqlwI",
@@ -46,30 +58,80 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Toggle forms
-window.showLogin = () => { document.getElementById("login-form").style.display="block"; document.getElementById("register-form").style.display="none"; }
-window.showRegister = () => { document.getElementById("login-form").style.display="none"; document.getElementById("register-form").style.display="block"; }
+window.addEventListener('DOMContentLoaded', () => {
+  const loginBtn = document.getElementById("login-btn");
+  const registerBtn = document.getElementById("register-btn");
 
-// Registration
-register-btn.onclick = async () => {
-  const name = reg-name.value;
-  const phone = reg-phone.value;
-  const email = reg-email.value;
-  const password = reg-password.value;
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  await addDoc(collection(db, "users"), { uid:userCredential.user.uid, name, phone, email, createdAt: new Date() });
-  alert("Registration Successful!");
-  showLogin();
-}
+  const loginEmail = document.getElementById("login-email");
+  const loginPassword = document.getElementById("login-password");
+  const regName = document.getElementById("reg-name");
+  const regPhone = document.getElementById("reg-phone");
+  const regEmail = document.getElementById("reg-email");
+  const regPassword = document.getElementById("reg-password");
 
-// Login
-login-btn.onclick = async () => {
-  const email = login-email.value;
-  const password = login-password.value;
-  await signInWithEmailAndPassword(auth, email, password);
-  alert("Login Successful!");
-  window.location.href = "user-dashboard.html";
-}
-</script>
+  const loginForm = document.getElementById("login-form");
+  const registerForm = document.getElementById("register-form");
+
+  const loginMsg = document.getElementById("login-msg");
+  const regMsg = document.getElementById("reg-msg");
+
+  // Show forms
+  window.showLogin = () => {
+    loginForm.style.display = "block";
+    registerForm.style.display = "none";
+    loginMsg.innerText = "";
+  }
+
+  window.showRegister = () => {
+    loginForm.style.display = "none";
+    registerForm.style.display = "block";
+    regMsg.innerText = "";
+  }
+
+  // Registration
+  registerBtn.addEventListener('click', async () => {
+    try {
+      const email = regEmail.value;
+      const password = regPassword.value;
+      const name = regName.value;
+      const phone = regPhone.value;
+
+      // Check if email already exists
+      const q = query(collection(db,"users"), where("email","==",email));
+      const querySnapshot = await getDocs(q);
+      if(!querySnapshot.empty){
+        regMsg.innerText = "Email already registered!";
+        regMsg.className = "error";
+        return;
+      }
+
+      const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+      await addDoc(collection(db, "users"), {
+        uid:userCredential.user.uid, name, phone, email, createdAt: new Date()
+      });
+      regMsg.innerText = "Registration successful! You can login now.";
+      regMsg.className = "success";
+      showLogin();
+    } catch(e){
+      regMsg.innerText = e.message;
+      regMsg.className = "error";
+    }
+  });
+
+  // Login
+  loginBtn.addEventListener('click', async () => {
+    try {
+      await signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
+      loginMsg.innerText = "Login Success!";
+      loginMsg.className = "success";
+      setTimeout(()=>{ window.location.href="user-dashboard.html"; }, 1000);
+    } catch(e){
+      loginMsg.innerText = "Invalid Email or Password!";
+      loginMsg.className = "error";
+    }
+  });
+
+});
+  </script>
 </body>
 </html>
