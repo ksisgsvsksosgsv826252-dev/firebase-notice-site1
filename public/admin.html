@@ -2,20 +2,29 @@
 <html>
 <head>
   <title>Admin Panel</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: Arial; max-width: 500px; margin: auto; padding: 20px; }
+    input, button, textarea { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; }
+    button { cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+    button:hover { background-color: #45a049; }
+    h2, h3 { text-align: center; }
+    .error { color: red; font-weight: bold; }
+    .success { color: green; font-weight: bold; }
+  </style>
 </head>
 <body>
-<h2>Admin Panel</h2>
+  <h2>Admin Panel</h2>
 
-<input id="admin-email" placeholder="Admin Email">
-<input id="admin-password" type="password" placeholder="Password">
-<button id="admin-login">Login</button>
+  <input id="admin-email" placeholder="Admin Email">
+  <input id="admin-password" type="password" placeholder="Password">
+  <button id="admin-login">Login</button>
+  <p id="admin-msg"></p>
 
-<h3>Edit Site Notice</h3>
-<textarea id="notice-text" rows="4"></textarea>
-<button id="update-notice">Update</button>
+  <h3>Edit Site Notice</h3>
+  <textarea id="notice-text" rows="4"></textarea>
+  <button id="update-notice">Update Notice</button>
 
-<script type="module">
+  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -34,17 +43,39 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-admin-login.onclick = async () => {
-  await signInWithEmailAndPassword(auth, admin-email.value, admin-password.value);
-  alert("Admin Logged In!");
-  const snap = await getDoc(doc(db,"site","notice"));
-  notice-text.value = snap.data().text;
-}
+window.addEventListener('DOMContentLoaded', () => {
+  const adminLoginBtn = document.getElementById("admin-login");
+  const adminEmail = document.getElementById("admin-email");
+  const adminPassword = document.getElementById("admin-password");
+  const noticeText = document.getElementById("notice-text");
+  const adminMsg = document.getElementById("admin-msg");
+  const updateBtn = document.getElementById("update-notice");
 
-update-notice.onclick = async () => {
-  await updateDoc(doc(db,"site","notice"), { text: notice-text.value });
-  alert("Notice Updated!");
-}
-</script>
+  adminLoginBtn.addEventListener('click', async () => {
+    try{
+      await signInWithEmailAndPassword(auth, adminEmail.value, adminPassword.value);
+      adminMsg.innerText = "Admin Logged In!";
+      adminMsg.className = "success";
+      const snap = await getDoc(doc(db,"site","notice"));
+      noticeText.value = snap.data().text;
+    } catch(e){
+      adminMsg.innerText = "Invalid Admin Email or Password!";
+      adminMsg.className = "error";
+    }
+  });
+
+  updateBtn.addEventListener('click', async () => {
+    try{
+      await updateDoc(doc(db,"site","notice"),{text:noticeText.value});
+      adminMsg.innerText = "Notice Updated!";
+      adminMsg.className = "success";
+    } catch(e){
+      adminMsg.innerText = e.message;
+      adminMsg.className = "error";
+    }
+  });
+
+});
+  </script>
 </body>
 </html>
