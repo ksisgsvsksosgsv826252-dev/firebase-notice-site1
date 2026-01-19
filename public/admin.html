@@ -9,232 +9,161 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
-        body {
-            background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+        body { background: #f4f6f9; min-height: 100vh; color: #333; }
 
-        /* --- লগইন স্টাইল --- */
-        .login-wrapper {
-            height: 100vh; display: flex; justify-content: center; align-items: center;
-        }
-        .login-box {
-            background: rgba(255,255,255,0.9); padding: 40px; border-radius: 15px;
-            width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .login-box input {
-            width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd;
-            border-radius: 5px; outline: none;
-        }
-        .login-btn {
-            width: 100%; padding: 12px; background: #2c3e50; color: white; border: none;
-            border-radius: 5px; cursor: pointer; font-weight: 600;
-        }
+        /* Navbar */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #2c3e50; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .profile-icon { width: 45px; height: 45px; background: #e74c3c; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 2px solid #fff; }
 
-        /* --- ড্যাশবোর্ড হেডার --- */
-        .navbar {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 30px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky; top: 0; z-index: 100;
-        }
-        .navbar h2 { font-size: 22px; color: #2c3e50; }
+        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
         
-        /* গোল প্রোফাইল আইকন (ডান কোণায়) */
-        .admin-profile-icon {
-            width: 45px; height: 45px; background: #e74c3c; color: white;
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 20px; cursor: pointer; border: 2px solid #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.3s;
-        }
-        .admin-profile-icon:hover { transform: scale(1.1); }
+        /* Menu Buttons */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: white; padding: 40px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .card i { font-size: 40px; margin-bottom: 15px; }
+        .c-users { border-top: 5px solid #3498db; } .c-users i { color: #3498db; }
+        .c-notice { border-top: 5px solid #f1c40f; } .c-notice i { color: #f1c40f; }
 
-        /* --- মেইন কন্টেইনার --- */
-        .container {
-            max-width: 1000px; margin: 30px auto; padding: 20px;
-        }
-
-        /* --- মেনু গ্রিড (দুইটা বড় বাটন) --- */
-        .menu-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-            animation: popIn 0.5s ease;
-        }
-        @media (max-width: 600px) { .menu-grid { grid-template-columns: 1fr; } }
-
-        .menu-card {
-            background: #fff; padding: 40px; border-radius: 15px;
-            text-align: center; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-bottom: 5px solid transparent;
-        }
-        .menu-card:hover { transform: translateY(-5px); }
-        
-        .card-users { border-color: #3498db; }
-        .card-users i { color: #3498db; font-size: 40px; margin-bottom: 15px; }
-        
-        .card-notice { border-color: #f1c40f; }
-        .card-notice i { color: #f1c40f; font-size: 40px; margin-bottom: 15px; }
-
-        .menu-card h3 { font-size: 20px; color: #444; }
-
-        /* --- সেকশন স্টাইল (লুকানো) --- */
-        .section-view { 
-            display: none; background: #fff; padding: 30px; border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            animation: slideUp 0.4s ease;
-        }
+        /* Sections */
+        .section { display: none; background: white; padding: 30px; border-radius: 15px; animation: slideUp 0.4s; }
         @keyframes slideUp { from {transform: translateY(20px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
-
-        .back-btn {
-            background: #95a5a6; color: white; border: none; padding: 8px 15px;
-            border-radius: 5px; cursor: pointer; margin-bottom: 20px; display: inline-block;
-        }
-
-        /* টেবিল ডিজাইন */
+        
+        .back-btn { background: #7f8c8d; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 15px; }
+        
+        /* Table Design */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
         th { background: #f8f9fa; color: #555; }
-        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; color: white; }
-        .bg-active { background: #27ae60; }
-        .bg-ban { background: #c0392b; }
-        .bg-inactive { background: #7f8c8d; }
+        .btn-edit { background: #3498db; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .btn-edit:hover { background: #2980b9; }
 
-        /* ইনপুট ফিল্ড */
-        .form-control { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        .btn-action { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; color: white; background: #2c3e50; }
+        /* Modal Design */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 500; overflow-y: auto; }
+        .modal-content { background: white; padding: 30px; border-radius: 10px; width: 95%; max-width: 500px; position: relative; animation: popIn 0.3s; }
+        @keyframes popIn { from {transform: scale(0.9);} to {transform: scale(1);} }
 
-        /* --- প্রোফাইল পপ-আপ --- */
-        .profile-popup {
-            position: absolute; top: 70px; right: 30px; width: 320px;
-            background: #fff; padding: 25px; border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: none; z-index: 200;
-        }
-        .profile-popup.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from {opacity: 0; top: 60px;} to {opacity: 1; top: 70px;} }
+        /* Form Inputs */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 5px; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; }
+        .form-control:focus { border-color: #3498db; }
+        .readonly-field { background: #f9f9f9; color: #777; cursor: not-allowed; }
 
-        /* টোস্ট */
-        #toast {
-            visibility: hidden; min-width: 250px; background-color: #333; color: #fff;
-            text-align: center; border-radius: 5px; padding: 16px; position: fixed;
-            z-index: 300; top: 30px; left: 50%; transform: translateX(-50%);
-        }
+        .btn-act { width: 100%; padding: 12px; border: none; background: #2c3e50; color: white; border-radius: 5px; cursor: pointer; font-weight: 600; margin-top: 10px; }
+        .btn-cancel { background: #e74c3c; margin-top: 10px; }
+        
+        /* Toast */
+        #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 600; top: 30px; left: 50%; transform: translateX(-50%); }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {top: 0; opacity: 0;} to {top: 30px; opacity: 1;} }
+        @keyframes fadeout { from {top: 30px; opacity: 1;} to {top: 0; opacity: 0;} }
 
-        /* এডিট মডাল */
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 500;
-        }
-        .modal-content { background: #fff; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; }
+        /* Profile Popup */
+        .profile-popup { position: absolute; top: 70px; right: 30px; width: 300px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: none; }
+        .profile-popup.active { display: block; }
+
     </style>
 </head>
 <body>
 
     <div id="toast">Notification</div>
 
-    <div class="login-wrapper" id="login-section">
-        <div class="login-box">
-            <h2 style="margin-bottom: 20px;">Admin Access</h2>
-            <input type="email" id="admin-email" placeholder="Admin Email">
-            <input type="password" id="admin-pass" placeholder="Password">
-            <button class="login-btn" onclick="adminLogin()">Enter Panel</button>
-        </div>
+    <div class="navbar">
+        <h2>Admin Panel</h2>
+        <div class="profile-icon" onclick="toggleProfilePopup()"><i class="fas fa-user-tie"></i></div>
     </div>
 
-    <div id="dashboard-section" style="display: none;">
-        
-        <div class="navbar">
-            <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
-            <div class="admin-profile-icon" onclick="toggleProfile()">
-                <i class="fas fa-user-tie"></i>
+    <div class="container">
+        <div class="menu-grid" id="main-menu">
+            <div class="card c-users" onclick="openSection('users')">
+                <i class="fas fa-users"></i>
+                <h3>User List</h3>
+                <p>Edit & Manage Users</p>
+            </div>
+            <div class="card c-notice" onclick="openSection('notice')">
+                <i class="fas fa-bell"></i>
+                <h3>Update Notice</h3>
+                <p>Send Dashboard Alerts</p>
             </div>
         </div>
 
-        <div class="container">
-            
-            <div id="main-menu" class="menu-grid">
-                <div class="menu-card card-users" onclick="openSection('users')">
-                    <i class="fas fa-users"></i>
-                    <h3>User Management</h3>
-                    <p style="color:#777; font-size:13px;">View, Edit & Ban Users</p>
-                </div>
-
-                <div class="menu-card card-notice" onclick="openSection('notice')">
-                    <i class="fas fa-bell"></i>
-                    <h3>Update Notice</h3>
-                    <p style="color:#777; font-size:13px;">Send Alerts to Dashboard</p>
-                </div>
+        <div id="users-sec" class="section">
+            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back</button>
+            <h3 style="margin-bottom:15px;">All Registered Users</h3>
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Serial</th>
+                            <th>User Name</th>
+                            <th style="text-align:right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table">
+                        </tbody>
+                </table>
             </div>
-
-            <div id="section-users" class="section-view">
-                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back to Menu</button>
-                <h2 style="margin-bottom: 15px;">All Users <i class="fas fa-sync" style="font-size:14px; cursor:pointer;" onclick="loadUsers()"></i></h2>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="user-table-body">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="section-notice" class="section-view">
-                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back to Menu</button>
-                <h2 style="margin-bottom: 15px;">Dashboard Notice</h2>
-                <label style="font-weight:600;">Message:</label>
-                <textarea id="notice-text" rows="5" class="form-control" placeholder="Write something..."></textarea>
-                <button class="btn-action" style="background:#f39c12; width:100%;" onclick="updateNotice()">Publish Update</button>
-            </div>
-
         </div>
 
-        <div class="profile-popup" id="profile-popup">
-            <h3 style="border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">Admin Profile</h3>
-            
-            <label style="font-size:12px; font-weight:bold;">Name</label>
-            <input type="text" id="adm-name" class="form-control" readonly style="background:#f9f9f9;">
-            
-            <label style="font-size:12px; font-weight:bold;">Phone</label>
-            <input type="text" id="adm-phone" class="form-control" readonly style="background:#f9f9f9;">
-            
-            <label style="font-size:12px; font-weight:bold;">Current Password (Stored)</label>
-            <input type="text" id="adm-view-pass" class="form-control" readonly style="background:#f9f9f9; color:#e74c3c;">
-
-            <hr style="margin: 15px 0;">
-            
-            <label style="font-size:12px; font-weight:bold;">New Password</label>
-            <input type="password" id="adm-new-pass" class="form-control" placeholder="Enter new password">
-            <button class="btn-action" style="width:100%; margin-top:5px;" onclick="updateAdminPass()">Change Password</button>
-
-            <button class="btn-action" style="width:100%; margin-top:15px; background:#c0392b;" onclick="logout()">Logout</button>
+        <div id="notice-sec" class="section">
+            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back</button>
+            <h3>Dashboard Notice</h3>
+            <textarea id="notice-txt" rows="5" class="form-control" style="margin-top:10px;"></textarea>
+            <button class="btn-act" style="background:#f39c12" onclick="pubNotice()">Publish Notice</button>
         </div>
-
     </div>
 
     <div class="modal" id="edit-modal">
         <div class="modal-content">
-            <h3 style="margin-bottom:15px;">Edit Status</h3>
+            <h2 style="text-align:center; margin-bottom:20px; color:#2c3e50;">Edit User Details</h2>
             <input type="hidden" id="edit-uid">
-            <p id="edit-username" style="font-weight:bold; margin-bottom:10px; color:#555;"></p>
             
-            <label>Select Status:</label>
-            <select id="edit-status" class="form-control">
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-                <option value="Banned">Banned</option>
-            </select>
-            
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button class="btn-action" style="flex:1; background:#95a5a6;" onclick="document.getElementById('edit-modal').style.display='none'">Cancel</button>
-                <button class="btn-action" style="flex:1; background:#27ae60;" onclick="saveUserStatus()">Save</button>
+            <div class="form-group">
+                <label>Account Created On (Not Editable)</label>
+                <input type="text" id="edit-date" class="form-control readonly-field" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="edit-name" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="edit-phone" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="text" id="edit-email" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>Password (Stored)</label>
+                <input type="text" id="edit-pass" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>Account Status</label>
+                <select id="edit-status" class="form-control">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                    <option value="Banned">Banned</option>
+                </select>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button class="btn-act btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-act" style="background:#27ae60;" onclick="saveUserChanges()">Save Changes</button>
             </div>
         </div>
+    </div>
+
+    <div class="profile-popup" id="p-popup">
+        <h4>My Profile</h4>
+        <p id="adm-name">Admin</p>
+        <button class="btn-act" style="background:#c0392b; margin-top:15px;" onclick="auth.signOut().then(()=>window.location.reload())">Logout</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -242,110 +171,52 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCHArkRwUM24OTgFZ55C26Iqf2djHvqlwI",
-            authDomain: "my-test-ee4e9.firebaseapp.com",
-            projectId: "my-test-ee4e9",
-            storageBucket: "my-test-ee4e9.firebasestorage.app",
-            messagingSenderId: "182385677359",
-            appId: "1:182385677359:web:3c9705740c7575bd19a2da",
-            measurementId: "G-09PLD4F6Q9"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyCHArkRwUM24OTgFZ55C26Iqf2djHvqlwI", authDomain: "my-test-ee4e9.firebaseapp.com", projectId: "my-test-ee4e9", storageBucket: "my-test-ee4e9.firebasestorage.app", messagingSenderId: "182385677359", appId: "1:182385677359:web:3c9705740c7575bd19a2da", measurementId: "G-09PLD4F6Q9" };
+        firebase.initializeApp(firebaseConfig); const auth = firebase.auth(); const db = firebase.firestore();
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        // Admin Security Check
+        auth.onAuthStateChanged(u => {
+            if(u) {
+                db.collection('users').doc(u.uid).get().then(d => {
+                    if(d.data().role !== 'admin') { auth.signOut(); alert("Access Denied!"); }
+                    else { document.getElementById('adm-name').innerText = d.data().name; }
+                });
+            } else { window.location.href="index.html"; }
+        });
 
-        // ১. লগইন লজিক
-        function adminLogin() {
-            const email = document.getElementById('admin-email').value;
-            const pass = document.getElementById('admin-pass').value;
-
-            auth.signInWithEmailAndPassword(email, pass)
-                .then((cred) => checkAdmin(cred.user.uid))
-                .catch((err) => showToast("Login Error: " + err.message));
+        // Navigation
+        function openSection(id){
+            document.getElementById('main-menu').style.display='none';
+            document.querySelectorAll('.section').forEach(s=>s.style.display='none');
+            if(id==='users'){ document.getElementById('users-sec').style.display='block'; loadUsers(); }
+            if(id==='notice'){ document.getElementById('notice-sec').style.display='block'; }
         }
+        function goBack(){ document.querySelectorAll('.section').forEach(s=>s.style.display='none'); document.getElementById('main-menu').style.display='grid'; }
+        function toggleProfilePopup(){ document.getElementById('p-popup').classList.toggle('active'); }
 
-        function checkAdmin(uid) {
-            db.collection('users').doc(uid).get().then((doc) => {
-                if(doc.exists && doc.data().role === 'admin') {
-                    document.getElementById('login-section').style.display = 'none';
-                    document.getElementById('dashboard-section').style.display = 'block';
-                    loadAdminProfile(uid);
-                } else {
-                    showToast("You are NOT an Admin!");
-                    auth.signOut();
-                }
-            });
-        }
-
-        // ২. নেভিগেশন (মেনু <-> সেকশন)
-        function openSection(id) {
-            document.getElementById('main-menu').style.display = 'none';
-            document.querySelectorAll('.section-view').forEach(el => el.style.display = 'none');
+        // 1. LOAD USERS (Only Serial & Name)
+        function loadUsers(){
+            const tbody = document.getElementById('user-table');
+            tbody.innerHTML = '<tr><td colspan="3">Loading...</td></tr>';
             
-            if(id === 'users') {
-                document.getElementById('section-users').style.display = 'block';
-                loadUsers();
-            } else if (id === 'notice') {
-                document.getElementById('section-notice').style.display = 'block';
-            }
-        }
-
-        function goBack() {
-            document.querySelectorAll('.section-view').forEach(el => el.style.display = 'none');
-            document.getElementById('main-menu').style.display = 'grid'; // গ্রিড লেআউট ফেরত আনা
-        }
-
-        // ৩. প্রোফাইল পপ-আপ
-        function toggleProfile() {
-            const popup = document.getElementById('profile-popup');
-            popup.classList.toggle('active');
-        }
-
-        function loadAdminProfile(uid) {
-            db.collection('users').doc(uid).get().then((doc) => {
-                const d = doc.data();
-                document.getElementById('adm-name').value = d.name;
-                document.getElementById('adm-phone').value = d.phone;
-                document.getElementById('adm-view-pass').value = d.passwordStr || "***";
-            });
-        }
-
-        function updateAdminPass() {
-            const newPass = document.getElementById('adm-new-pass').value;
-            const user = auth.currentUser;
-            if(newPass.length < 6) return showToast("Password too short!");
-
-            user.updatePassword(newPass).then(() => {
-                db.collection('users').doc(user.uid).update({ passwordStr: newPass });
-                document.getElementById('adm-view-pass').value = newPass;
-                document.getElementById('adm-new-pass').value = "";
-                showToast("Password Changed!");
-            }).catch(e => showToast(e.message));
-        }
-
-        // ৪. ইউজার লোড এবং এডিট
-        function loadUsers() {
-            const tbody = document.getElementById('user-table-body');
-            tbody.innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
-            
-            db.collection('users').get().then(snap => {
+            db.collection('users').get().then(snap=>{
                 tbody.innerHTML = "";
-                snap.forEach(doc => {
-                    const u = doc.data();
-                    if(u.role === 'admin') return;
+                let serial = 1;
+                snap.forEach(doc=>{
+                    let d = doc.data();
+                    if(d.role === 'admin') return; // Don't show admin in list
 
-                    let badgeClass = u.status === 'Banned' ? 'bg-ban' : (u.status === 'Inactive' ? 'bg-inactive' : 'bg-active');
+                    // Data for Edit (Hidden in button onclick)
+                    // We pass ID and Object to the edit function
+                    let userObj = JSON.stringify(d).replace(/"/g, '&quot;');
                     
                     tbody.innerHTML += `
                         <tr>
-                            <td>${u.name}<br><small style="color:#888;">${u.email}</small></td>
-                            <td>${u.phone}</td>
-                            <td><span class="status-badge ${badgeClass}">${u.status || 'Active'}</span></td>
-                            <td>
-                                <button onclick="openEdit('${doc.id}', '${u.name}', '${u.status}')" style="background:#3498db; border:none; color:white; padding:5px 10px; border-radius:3px; cursor:pointer;">
-                                    <i class="fas fa-edit"></i>
+                            <td>${serial++}</td>
+                            <td style="font-weight:600; color:#2c3e50;">${d.name || 'No Name'}</td>
+                            <td style="text-align:right;">
+                                <button class="btn-edit" onclick="openEditModal('${doc.id}')">
+                                    <i class="fas fa-edit"></i> Edit
                                 </button>
                             </td>
                         </tr>
@@ -354,32 +225,65 @@
             });
         }
 
-        function openEdit(uid, name, status) {
-            document.getElementById('edit-modal').style.display = 'flex';
-            document.getElementById('edit-uid').value = uid;
-            document.getElementById('edit-username').innerText = "User: " + name;
-            document.getElementById('edit-status').value = status || 'Active';
-        }
+        // 2. OPEN EDIT MODAL (Fetch Full Details)
+        function openEditModal(uid){
+            db.collection('users').doc(uid).get().then(doc => {
+                if(doc.exists){
+                    let data = doc.data();
+                    
+                    document.getElementById('edit-uid').value = uid;
+                    
+                    // Populate Fields
+                    document.getElementById('edit-date').value = data.createdAt || "Unknown"; // Read Only
+                    document.getElementById('edit-name').value = data.name || "";
+                    document.getElementById('edit-phone').value = data.phone || "";
+                    document.getElementById('edit-email').value = data.email || "";
+                    document.getElementById('edit-pass').value = data.passwordStr || ""; // Shows stored password
+                    document.getElementById('edit-status').value = data.status || "Active";
 
-        function saveUserStatus() {
-            const uid = document.getElementById('edit-uid').value;
-            const st = document.getElementById('edit-status').value;
-            
-            db.collection('users').doc(uid).update({ status: st }).then(() => {
-                showToast("Updated!");
-                document.getElementById('edit-modal').style.display = 'none';
-                loadUsers();
+                    // Show Modal
+                    document.getElementById('edit-modal').style.display = 'flex';
+                }
             });
         }
 
-        function updateNotice() {
-            const txt = document.getElementById('notice-text').value;
-            db.collection('app_data').doc('settings').set({ notice: txt }, { merge: true })
-              .then(() => showToast("Notice Published!"));
+        function closeModal(){ document.getElementById('edit-modal').style.display = 'none'; }
+
+        // 3. SAVE CHANGES (With Alert)
+        function saveUserChanges(){
+            const uid = document.getElementById('edit-uid').value;
+            const name = document.getElementById('edit-name').value;
+            const phone = document.getElementById('edit-phone').value;
+            const email = document.getElementById('edit-email').value;
+            const pass = document.getElementById('edit-pass').value;
+            const status = document.getElementById('edit-status').value;
+
+            // ALERT BEFORE SAVING
+            if(confirm("Are you sure you want to update this user's information?")) {
+                
+                db.collection('users').doc(uid).update({
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    passwordStr: pass, // Updating stored text password
+                    status: status
+                }).then(() => {
+                    showToast("User Details Updated Successfully!");
+                    closeModal();
+                    loadUsers(); // Refresh the list
+                }).catch(error => {
+                    showToast("Error updating: " + error.message);
+                });
+
+            } else {
+                // Do nothing if cancelled
+            }
         }
 
-        function logout() {
-            auth.signOut().then(() => location.reload());
+        function pubNotice(){
+            let txt = document.getElementById('notice-txt').value;
+            db.collection('app_data').doc('settings').set({notice:txt},{merge:true})
+            .then(()=>showToast("Notice Published!"));
         }
 
         function showToast(msg) {
@@ -387,18 +291,13 @@
             t.innerText = msg; t.className = "show";
             setTimeout(() => t.className = t.className.replace("show", ""), 3000);
         }
-
-        // অটো লগইন চেক
-        auth.onAuthStateChanged(user => {
-            if(user) checkAdmin(user.uid);
-        });
         
-        // বাইরে ক্লিক করলে পপ-আপ বন্ধ
-        window.onclick = function(e) {
-            if (!e.target.closest('.admin-profile-icon') && !e.target.closest('#profile-popup')) {
-                document.getElementById('profile-popup').classList.remove('active');
-            }
+        // Close modal on outside click
+        window.onclick = function(event) {
+            let m = document.getElementById('edit-modal');
+            if (event.target == m) { m.style.display = "none"; }
         }
+
     </script>
 </body>
-                                                                                                              </html>
+    </html>
