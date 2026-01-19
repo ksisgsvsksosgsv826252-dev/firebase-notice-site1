@@ -274,7 +274,7 @@
                 .then((cred) => {
                     showToast("Login Successful!", "success");
                     console.log("User Logged In:", cred.user);
-                    // window.location.href = "dashboard.html";
+                    window.location.href = "user-dashboard.html";
                 })
                 .catch((err) => {
                     let msg = "Login Failed";
