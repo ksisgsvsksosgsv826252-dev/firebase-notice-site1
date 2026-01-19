@@ -3,166 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Login & Registration</title>
+    <title>Secure Access</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
             background: linear-gradient(135deg, #1c92d2 0%, #f2fcfe 100%);
         }
-
         .container {
-            position: relative;
-            width: 400px;
-            min-height: 550px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            padding: 40px;
-            transition: height 0.3s ease;
+            position: relative; width: 400px; min-height: 550px; background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); overflow: hidden; padding: 40px;
         }
-
-        .form-box {
-            position: absolute;
-            width: 100%;
-            padding-right: 80px; 
-            transition: 0.5s ease-in-out;
-            top: 40px;
-        }
-
+        .form-box { position: absolute; width: 100%; padding-right: 80px; transition: 0.5s ease-in-out; top: 40px; }
         .form-box.hidden { transform: translateX(400px); opacity: 0; pointer-events: none; }
         .form-box.active { transform: translateX(0); opacity: 1; pointer-events: all; }
         #login-box.hidden { transform: translateX(-400px); }
 
         h2 { color: #333; text-align: center; margin-bottom: 30px; font-weight: 600; }
-
         .input-group { position: relative; margin-bottom: 20px; }
+        .input-group input { width: 100%; padding: 12px 15px 12px 45px; background: #f0f0f0; border: none; border-radius: 30px; outline: none; }
+        .input-group i.field-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #777; }
+        .input-group .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #777; }
         
-        .input-group input {
-            width: 100%;
-            padding: 12px 15px 12px 45px;
-            background: #f0f0f0;
-            border: none;
-            outline: none;
-            border-radius: 30px;
-            color: #333;
-            font-size: 15px;
-        }
-        
-        .input-group i.field-icon {
-            position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #777;
-        }
-
-        .input-group .toggle-password {
-            position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #777;
-        }
-
-        /* Forgot password বাদ দেওয়ায় জাস্ট Remember me বামে থাকবে */
-        .remember-forgot {
-            display: flex;
-            justify-content: flex-start; 
-            font-size: 13px;
-            margin-bottom: 20px;
-            color: #555;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 30px;
-            background: #1c92d2;
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
-            margin-bottom: 15px;
-        }
-        .btn:hover { background: #0f6291; box-shadow: 0 5px 15px rgba(28, 146, 210, 0.4); }
-
-        .switch-link { text-align: center; font-size: 14px; color: #555; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 30px; background: #1c92d2; color: white; font-weight: 600; cursor: pointer; margin-top: 10px; }
+        .switch-link { text-align: center; margin-top: 20px; font-size: 14px; }
         .switch-link a { color: #1c92d2; font-weight: 600; cursor: pointer; text-decoration: none; }
-        .switch-link a:hover { text-decoration: underline; }
 
-        #toast {
-            visibility: hidden; min-width: 280px; background-color: #333; color: #fff;
-            text-align: center; border-radius: 5px; padding: 16px; position: fixed;
-            z-index: 100; top: 30px; right: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
+        #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 100; top: 30px; right: 30px; }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
-        #toast.success { background-color: #2ecc71; border-left: 5px solid #27ae60; }
-        #toast.error { background-color: #e74c3c; border-left: 5px solid #c0392b; }
-
         @keyframes fadein { from {top: 0; opacity: 0;} to {top: 30px; opacity: 1;} }
         @keyframes fadeout { from {top: 30px; opacity: 1;} to {top: 0; opacity: 0;} }
     </style>
 </head>
 <body>
-
-    <div id="toast">Notification goes here</div>
-
+    <div id="toast">Notification</div>
     <div class="container">
-        
         <div class="form-box active" id="login-box">
             <h2>Welcome Back</h2>
             <form onsubmit="handleLogin(event)">
-                <div class="input-group">
-                    <i class="fas fa-envelope field-icon"></i>
-                    <input type="email" id="login-email" placeholder="Email Address" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock field-icon"></i>
-                    <input type="password" id="login-password" placeholder="Password" required>
-                    <i class="fas fa-eye toggle-password" onclick="togglePassword('login-password', this)"></i>
-                </div>
-                
-                <div class="remember-forgot">
-                    <label><input type="checkbox" id="remember-me"> Remember me</label>
-                </div>
-                
+                <div class="input-group"><i class="fas fa-envelope field-icon"></i><input type="email" id="login-email" placeholder="Email" required></div>
+                <div class="input-group"><i class="fas fa-lock field-icon"></i><input type="password" id="login-password" placeholder="Password" required><i class="fas fa-eye toggle-password" onclick="togglePassword('login-password', this)"></i></div>
+                <label style="font-size:13px; color:#555;"><input type="checkbox" id="remember-me"> Remember me</label>
                 <button type="submit" class="btn">Login</button>
-                
-                <div class="switch-link">
-                    <p>New here? <a onclick="switchForm('register')">Create Account</a></p>
-                </div>
+                <div class="switch-link"><p>New here? <a onclick="switchForm('register')">Create Account</a></p></div>
             </form>
         </div>
-
         <div class="form-box hidden" id="register-box">
             <h2>Create Account</h2>
             <form onsubmit="handleRegister(event)">
-                <div class="input-group">
-                    <i class="fas fa-user field-icon"></i>
-                    <input type="text" id="reg-name" placeholder="Full Name" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-phone field-icon"></i>
-                    <input type="tel" id="reg-phone" placeholder="Phone Number" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-envelope field-icon"></i>
-                    <input type="email" id="reg-email" placeholder="Email Address" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock field-icon"></i>
-                    <input type="password" id="reg-password" placeholder="Password" required>
-                    <i class="fas fa-eye toggle-password" onclick="togglePassword('reg-password', this)"></i>
-                </div>
-                
+                <div class="input-group"><i class="fas fa-user field-icon"></i><input type="text" id="reg-name" placeholder="Full Name" required></div>
+                <div class="input-group"><i class="fas fa-phone field-icon"></i><input type="tel" id="reg-phone" placeholder="Phone Number" required></div>
+                <div class="input-group"><i class="fas fa-envelope field-icon"></i><input type="email" id="reg-email" placeholder="Email" required></div>
+                <div class="input-group"><i class="fas fa-lock field-icon"></i><input type="password" id="reg-password" placeholder="Password" required><i class="fas fa-eye toggle-password" onclick="togglePassword('reg-password', this)"></i></div>
                 <button type="submit" class="btn">Register</button>
-                
-                <div class="switch-link">
-                    <p>Already have an account? <a onclick="switchForm('login')">Login</a></p>
-                </div>
+                <div class="switch-link"><p>Already have an account? <a onclick="switchForm('login')">Login</a></p></div>
             </form>
         </div>
     </div>
@@ -170,119 +67,36 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCHArkRwUM24OTgFZ55C26Iqf2djHvqlwI",
-            authDomain: "my-test-ee4e9.firebaseapp.com",
-            projectId: "my-test-ee4e9",
-            storageBucket: "my-test-ee4e9.firebasestorage.app",
-            messagingSenderId: "182385677359",
-            appId: "1:182385677359:web:3c9705740c7575bd19a2da",
-            measurementId: "G-09PLD4F6Q9"
-        };
-
+        const firebaseConfig = { apiKey: "AIzaSyCHArkRwUM24OTgFZ55C26Iqf2djHvqlwI", authDomain: "my-test-ee4e9.firebaseapp.com", projectId: "my-test-ee4e9", storageBucket: "my-test-ee4e9.firebasestorage.app", messagingSenderId: "182385677359", appId: "1:182385677359:web:3c9705740c7575bd19a2da", measurementId: "G-09PLD4F6Q9" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        function switchForm(target) {
-            const loginBox = document.getElementById('login-box');
-            const registerBox = document.getElementById('register-box');
+        function switchForm(t){ const l=document.getElementById('login-box'), r=document.getElementById('register-box'); if(t==='register'){l.classList.add('hidden');l.classList.remove('active');r.classList.add('active');r.classList.remove('hidden');}else{r.classList.add('hidden');r.classList.remove('active');l.classList.add('active');l.classList.remove('hidden');}}
+        function togglePassword(id,icon){ const i=document.getElementById(id); i.type=i.type==='password'?'text':'password'; icon.classList.toggle('fa-eye'); icon.classList.toggle('fa-eye-slash'); }
+        function showToast(m,t){ const x=document.getElementById("toast"); x.innerText=m; x.style.background=t==='error'?'#e74c3c':'#2ecc71'; x.className="show"; setTimeout(()=>{x.className=x.className.replace("show","")},3000); }
 
-            if (target === 'register') {
-                loginBox.classList.remove('active');
-                loginBox.classList.add('hidden');
-                registerBox.classList.remove('hidden');
-                registerBox.classList.add('active');
-            } else {
-                registerBox.classList.remove('active');
-                registerBox.classList.add('hidden');
-                loginBox.classList.remove('hidden');
-                loginBox.classList.add('active');
-            }
+        function handleRegister(e){ e.preventDefault();
+            const name=document.getElementById('reg-name').value, phone=document.getElementById('reg-phone').value, email=document.getElementById('reg-email').value, pass=document.getElementById('reg-password').value;
+            auth.createUserWithEmailAndPassword(email,pass).then(c=>{
+                return db.collection('users').doc(c.user.uid).set({ name:name, phone:phone, email:email, role:'user', createdAt: new Date().toLocaleString() });
+            }).then(()=>{ showToast("Account Created! Login now.","success"); switchForm('login'); document.getElementById('login-email').value=email; document.getElementById('login-password').value=pass; })
+            .catch(err=>showToast(err.message,"error"));
         }
 
-        function togglePassword(fieldId, icon) {
-            const input = document.getElementById(fieldId);
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = "password";
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-
-        function showToast(msg, type) {
-            const toast = document.getElementById("toast");
-            toast.innerText = msg;
-            toast.className = "show " + type;
-            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('reg-name').value;
-            const phone = document.getElementById('reg-phone').value;
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-            const createdAt = new Date().toLocaleString();
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((cred) => {
-                    return db.collection('users').doc(cred.user.uid).set({
-                        name: name,
-                        email: email,
-                        phone: phone,
-                        createdAt: createdAt,
-                        role: 'user'
-                    });
-                })
-                .then(() => {
-                    showToast("Account created successfully!", "success");
-                    switchForm('login');
-                    document.getElementById('login-email').value = email;
-                    document.getElementById('login-password').value = password;
-                    
-                    document.getElementById('reg-name').value = '';
-                    document.getElementById('reg-phone').value = '';
-                    document.getElementById('reg-email').value = '';
-                    document.getElementById('reg-password').value = '';
-                })
-                .catch((err) => {
-                    showToast("Error: " + err.message, "error");
+        function handleLogin(e){ e.preventDefault();
+            const email=document.getElementById('login-email').value, pass=document.getElementById('login-password').value, rem=document.getElementById('remember-me').checked;
+            auth.setPersistence(rem?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION)
+            .then(()=>auth.signInWithEmailAndPassword(email,pass))
+            .then(c=>{
+                showToast("Login Success! Redirecting...","success");
+                db.collection('users').doc(c.user.uid).get().then(doc=>{
+                    if(doc.exists && doc.data().role === 'admin') window.location.href = "admin.html";
+                    else window.location.href = "user-dashboard.html";
                 });
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const rememberMe = document.getElementById('remember-me').checked;
-
-            const persistence = rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
-
-            auth.setPersistence(persistence)
-                .then(() => {
-                    return auth.signInWithEmailAndPassword(email, password);
-                })
-                .then((cred) => {
-                    showToast("Login Successful!", "success");
-                    console.log("User Logged In:", cred.user);
-                    window.location.href = "user-dashboard.html";
-                })
-                .catch((err) => {
-                    let msg = "Login Failed";
-                    if(err.code === 'auth/wrong-password') msg = "Wrong Password!";
-                    if(err.code === 'auth/user-not-found') msg = "User not found!";
-                    showToast(msg, "error");
-                });
+            }).catch(err=>showToast("Login Failed: "+err.message,"error"));
         }
     </script>
 </body>
-  </html>
+                                                                                                                </html>
