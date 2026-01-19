@@ -1,11 +1,315 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>User Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #1c92d2 0%, #f2fcfe 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* ড্যাশবোর্ডের মূল বডি */
+        .dashboard-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 80vh;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            /* চারদিকের সুন্দর বর্ডার এবং শ্যাডো */
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1), 0 0 0 5px rgba(255, 255, 255, 0.3); 
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: popIn 0.8s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* হেডার */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .header h2 { color: #333; font-weight: 600; }
+
+        /* প্রোফাইল আইকন */
+        .profile-icon {
+            width: 45px;
+            height: 45px;
+            background: #1c92d2;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(28, 146, 210, 0.4);
+        }
+        .profile-icon:hover { transform: scale(1.1); background: #0f6291; }
+
+        /* নোটিশ বোর্ড */
+        .notice-board {
+            margin: 30px;
+            padding: 20px;
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            border-radius: 5px;
+            color: #856404;
+            animation: slideDown 1s ease;
+        }
+        .notice-title { font-weight: bold; margin-bottom: 5px; display: block; }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* ওয়েলকাম মেসেজ */
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            text-align: center;
+            color: #555;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* প্রোফাইল মডাল (Popup) */
+        .profile-modal {
+            position: absolute;
+            top: 75px;
+            right: 30px;
+            width: 320px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 20px;
+            display: none; /* শুরুতে লুকানো থাকবে */
+            z-index: 100;
+            border: 1px solid #eee;
+        }
+        .profile-modal.active { display: block; animation: fadeIn 0.3s; }
+
+        @keyframes fadeIn { from { opacity: 0; top: 60px; } to { opacity: 1; top: 75px; } }
+
+        .profile-info h3 { font-size: 18px; margin-bottom: 5px; color: #333; }
+        .profile-info p { font-size: 13px; color: #666; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+        /* পাসওয়ার্ড আপডেট ফর্ম */
+        .update-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-update { background: #28a745; color: #fff; margin-bottom: 10px; }
+        .btn-update:hover { background: #218838; }
+        
+        .btn-logout { background: #dc3545; color: #fff; }
+        .btn-logout:hover { background: #c82333; }
+
+        /* টোস্ট নোটিফিকেশন */
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: #333; color: #fff;
+            text-align: center; border-radius: 5px; padding: 16px; position: fixed;
+            z-index: 200; top: 30px; right: 30px;
+        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+    </style>
 </head>
 <body>
-  <h2>Welcome User!</h2>
-  <p>This is your dashboard.</p>
+
+    <div id="toast">Notification</div>
+
+    <div class="dashboard-container">
+        <div class="header">
+            <h2>My Dashboard</h2>
+            <div class="profile-icon" onclick="toggleProfile()">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+
+        <div class="notice-board" id="notice-section">
+            <span class="notice-title"><i class="fas fa-bullhorn"></i> Notice:</span>
+            <span id="admin-notice-text">Loading latest updates...</span>
+        </div>
+
+        <div class="content-area">
+            <h1 id="welcome-msg">Welcome, User!</h1>
+            <p>আপনার ড্যাশবোর্ড রেডি। এখান থেকে আপনি আপনার প্রোফাইল ম্যানেজ করতে পারবেন।</p>
+        </div>
+
+        <div class="profile-modal" id="profile-modal">
+            <div class="profile-info">
+                <h3 id="p-name">Loading...</h3>
+                <p id="p-details">Loading...</p>
+            </div>
+            
+            <div class="update-form">
+                <label style="font-size:12px; font-weight:bold; color:#555;">Change Password</label>
+                <input type="password" id="old-pass" placeholder="Current Password">
+                <input type="password" id="new-pass" placeholder="New Password">
+                <button class="btn btn-update" onclick="updatePassword()">Update Password</button>
+            </div>
+
+            <button class="btn btn-logout" onclick="logout()">Logout <i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        // কনফিগারেশন (আপনারটাই বসানো হয়েছে)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCHArkRwUM24OTgFZ55C26Iqf2djHvqlwI",
+            authDomain: "my-test-ee4e9.firebaseapp.com",
+            projectId: "my-test-ee4e9",
+            storageBucket: "my-test-ee4e9.firebasestorage.app",
+            messagingSenderId: "182385677359",
+            appId: "1:182385677359:web:3c9705740c7575bd19a2da",
+            measurementId: "G-09PLD4F6Q9"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUserEmail = "";
+
+        // ১. চেক করা ইউজার লগইন আছে কি না
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // ইউজার লগইন আছে
+                currentUserEmail = user.email;
+                loadUserData(user.uid);
+                loadNotice();
+            } else {
+                // লগইন নেই, লগইন পেজে পাঠিয়ে দাও
+                window.location.href = "index.html";
+            }
+        });
+
+        // ২. ইউজার ডাটা লোড করা
+        function loadUserData(uid) {
+            db.collection('users').doc(uid).get().then((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('welcome-msg').innerText = "Welcome, " + data.name + "!";
+                    document.getElementById('p-name').innerText = data.name;
+                    document.getElementById('p-details').innerHTML = `${data.phone}<br>${data.email}`;
+                }
+            });
+        }
+
+        // ৩. নোটিশ লোড করা (ডাটাবেস থেকে)
+        function loadNotice() {
+            // 'app_data' কালেকশনের 'settings' ডকে নোটিশ সেভ থাকবে
+            db.collection('app_data').doc('settings').onSnapshot((doc) => {
+                if (doc.exists && doc.data().notice) {
+                    document.getElementById('admin-notice-text').innerText = doc.data().notice;
+                } else {
+                    document.getElementById('admin-notice-text').innerText = "বর্তমানে কোনো নতুন নোটিশ নেই।";
+                }
+            });
+        }
+
+        // ৪. প্রোফাইল পপ-আপ খোলা/বন্ধ করা
+        function toggleProfile() {
+            const modal = document.getElementById('profile-modal');
+            modal.classList.toggle('active');
+        }
+
+        // ৫. পাসওয়ার্ড আপডেট লজিক
+        function updatePassword() {
+            const oldPass = document.getElementById('old-pass').value;
+            const newPass = document.getElementById('new-pass').value;
+            const user = auth.currentUser;
+
+            if (!oldPass || !newPass) {
+                showToast("Please fill all fields", "error");
+                return;
+            }
+
+            showToast("Verifying...", "info");
+
+            // সিকিউরিটি: আগে পুরনো পাসওয়ার্ড চেক করা (Re-authentication)
+            const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPass);
+
+            user.reauthenticateWithCredential(credential).then(() => {
+                // পুরনো পাসওয়ার্ড সঠিক, এখন নতুনটা সেট করা হবে
+                user.updatePassword(newPass).then(() => {
+                    showToast("Password Updated Successfully!", "success");
+                    document.getElementById('old-pass').value = "";
+                    document.getElementById('new-pass').value = "";
+                }).catch((error) => {
+                    showToast("Error updating: " + error.message, "error");
+                });
+            }).catch((error) => {
+                showToast("Old password is incorrect!", "error");
+            });
+        }
+
+        // ৬. লগআউট
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.href = "index.html";
+            });
+        }
+
+        // হেল্পার: টোস্ট মেসেজ
+        function showToast(msg, type) {
+            const toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.style.backgroundColor = type === 'error' ? '#dc3545' : (type === 'success' ? '#28a745' : '#333');
+            toast.className = "show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        // বাইরে ক্লিক করলে মডাল বন্ধ হবে
+        window.onclick = function(event) {
+            if (!event.target.matches('.profile-icon') && !event.target.matches('.profile-icon i') && !document.getElementById('profile-modal').contains(event.target)) {
+                document.getElementById('profile-modal').classList.remove('active');
+            }
+        }
+    </script>
 </body>
-</html>
+  </html>
