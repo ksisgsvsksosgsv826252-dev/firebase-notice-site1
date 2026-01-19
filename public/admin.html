@@ -1,7 +1,50 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
-  <h3>Admin Panel</h3>
-  <p>Login coming soon...</p>
+<h2>Admin Panel</h2>
+
+<input id="admin-email" placeholder="Admin Email">
+<input id="admin-password" type="password" placeholder="Password">
+<button id="admin-login">Login</button>
+
+<h3>Edit Site Notice</h3>
+<textarea id="notice-text" rows="4"></textarea>
+<button id="update-notice">Update</button>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCHArkRwUM24OTgFZ55C26Iqf2djHvqlwI",
+  authDomain: "my-test-ee4e9.firebaseapp.com",
+  projectId: "my-test-ee4e9",
+  storageBucket: "my-test-ee4e9.firebasestorage.app",
+  messagingSenderId: "182385677359",
+  appId: "1:182385677359:web:3c9705740c7575bd19a2da",
+  measurementId: "G-09PLD4F6Q9"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+admin-login.onclick = async () => {
+  await signInWithEmailAndPassword(auth, admin-email.value, admin-password.value);
+  alert("Admin Logged In!");
+  const snap = await getDoc(doc(db,"site","notice"));
+  notice-text.value = snap.data().text;
+}
+
+update-notice.onclick = async () => {
+  await updateDoc(doc(db,"site","notice"), { text: notice-text.value });
+  alert("Notice Updated!");
+}
+</script>
 </body>
 </html>
