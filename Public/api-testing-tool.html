@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Testing Tool - Ultimate Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding: 15px;
+            transition: transform 0.3s ease;
+            transform-origin: top center;
+        }
+
+        /* Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            top: 0;
+            left: 0;
+        }
+
+        .floating-cube {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, rgba(138, 43, 226, 0.15), rgba(75, 0, 130, 0.15));
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .cube1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .cube2 { top: 70%; left: 80%; animation-delay: 3s; }
+        .cube3 { top: 40%; left: 20%; animation-delay: 6s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-80px) rotate(180deg); }
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #a8a8b3;
+            font-size: 13px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            border-radius: 8px;
+        }
+
+        .zoom-label {
+            color: #667eea;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .zoom-slider {
+            width: 100px;
+            cursor: pointer;
+        }
+
+        .zoom-value {
+            color: #667eea;
+            font-size: 13px;
+            font-weight: 600;
+            min-width: 45px;
+        }
+
+        .settings-btn {
+            padding: 8px 15px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            border-radius: 8px;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .settings-btn:hover {
+            background: rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Settings Modal */
+        .settings-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .settings-modal.active {
+            display: flex;
+        }
+
+        .settings-content {
+            background: rgba(15, 12, 41, 0.95);
+            border-radius: 20px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            padding: 25px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+        }
+
+        .settings-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: rgba(255, 71, 87, 0.2);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            color: #ff4757;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 71, 87, 0.3);
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+        }
+
+        .setting-label {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .radio-option input[type="radio"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .radio-option label {
+            color: #a8a8b3;
+            font-size: 13px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card */
+        .card {
+            background: rgba(15, 12, 41, 0.85);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            padding: 18px;
+        }
+
+        .card-title {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Method and URL */
+        .method-url-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .method-select {
+            flex: 0 0 100px;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            outline: none;
+            font-family: 'Courier New', monospace;
+        }
+
+        select {
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        select option {
+            background: #1a1a2e;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #666;
+        }
+
+        /* Content Type */
+        .content-type-group {
+            margin-bottom: 15px;
+        }
+
+        .content-type-label {
+            color: #a8a8b3;
+            font-size: 12px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+        }
+
+        .tab {
+            padding: 8px 15px;
+            background: transparent;
+            border: none;
+            color: #a8a8b3;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab:hover {
+            color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Header Row */
+        .header-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .header-row input {
+            flex: 1;
+        }
+
+        .add-btn, .remove-btn {
+            padding: 8px 12px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn {
+            background: rgba(255, 71, 87, 0.2);
+            border-color: rgba(255, 71, 87, 0.3);
+            color: #ff4757;
+        }
+
+        .add-btn:hover {
+            background: rgba(102, 126, 234, 0.3);
+        }
+
+        .remove-btn:hover {
+            background: rgba(255, 71, 87, 0.3);
+        }
+
+        /* Send Button */
+        .send-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            margin-top: 10px;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Response Status */
+        .response-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(38, 222, 129, 0.2);
+            border: 1px solid rgba(38, 222, 129, 0.3);
+            color: #26de81;
+        }
+
+        .status-error {
+            background: rgba(255, 71, 87, 0.2);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            color: #ff4757;
+        }
+
+        .status-info {
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: #667eea;
+        }
+
+        .response-time {
+            color: #a8a8b3;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Response Box */
+        .response-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .response-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(138, 43, 226, 0.2);
+        }
+
+        .response-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            padding: 4px 8px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 5px;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(102, 126, 234, 0.3);
+        }
+
+        .section-content {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #a8a8b3;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.5);
+            border-radius: 10px;
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(38, 222, 129, 0.95);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 2000;
+            display: none;
+        }
+
+        .toast.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Info Badge */
+        .info-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 5px;
+            color: #667eea;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .method-url-group {
+                flex-direction: column;
+            }
+
+            .method-select {
+                flex: 1;
+            }
+
+            .zoom-control {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-animation">
+        <div class="floating-cube cube1"></div>
+        <div class="floating-cube cube2"></div>
+        <div class="floating-cube cube3"></div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🚀</div>
+            <h1>API Testing Tool Pro</h1>
+            <p class="subtitle">Professional API Testing <span class="info-badge">🔓 CORS Enabled</span></p>
+        </div>
+
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="zoom-control">
+                <span class="zoom-label">🔍 Zoom:</span>
+                <input type="range" id="zoomSlider" class="zoom-slider" min="50" max="150" value="100" step="10">
+                <span class="zoom-value" id="zoomValue">100%</span>
+            </div>
+            <button class="settings-btn" id="settingsBtn">⚙️ Settings</button>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="settings-modal" id="settingsModal">
+            <div class="settings-content">
+                <div class="settings-header">
+                    <h3 class="settings-title">⚙️ Settings</h3>
+                    <button class="close-btn" id="closeSettingsBtn">✕ Close</button>
+                </div>
+
+                <!-- User Agent -->
+                <div class="setting-group">
+                    <label class="setting-label">🌐 User Agent</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="userAgent" value="random" id="uaRandom" checked>
+                            <label for="uaRandom">Random - প্রতিবার নতুন</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="userAgent" value="manual" id="uaManual">
+                            <label for="uaManual">Manual - নিজে লিখুন</label>
+                        </div>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="manualUA" 
+                        placeholder="Custom User Agent..."
+                        style="display: none; margin-top: 10px;"
+                    >
+                </div>
+
+                <!-- Device ID -->
+                <div class="setting-group">
+                    <label class="setting-label">📱 Device ID (Optional)</label>
+                    <input 
+                        type="text" 
+                        id="deviceIdInput" 
+                        placeholder="Device ID..."
+                        style="margin-bottom: 8px;"
+                    >
+                    <button 
+                        style="width: 100%; padding: 8px; background: rgba(102, 126, 234, 0.2); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 8px; color: #667eea; cursor: pointer; font-size: 12px;"
+                        id="generateDeviceId"
+                    >
+                        🎲 Random Generate
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Request -->
+            <div class="card">
+                <h2 class="card-title">📤 Request</h2>
+
+                <div class="method-url-group">
+                    <select id="methodSelect" class="method-select">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                        <option value="PATCH">PATCH</option>
+                    </select>
+                    <input 
+                        type="text" 
+                        id="urlInput" 
+                        class="url-input" 
+                        placeholder="https://api.example.com/endpoint"
+                    >
+                </div>
+
+                <div class="content-type-group">
+                    <label class="content-type-label">📋 Content Type</label>
+                    <select id="contentTypeSelect">
+                        <option value="application/json">JSON (application/json)</option>
+                        <option value="application/x-www-form-urlencoded">Form Data</option>
+                        <option value="multipart/form-data">Multipart Form</option>
+                        <option value="text/plain">Plain Text</option>
+                        <option value="application/xml">XML</option>
+                        <option value="text/html">HTML</option>
+                    </select>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" data-tab="headers">Headers</button>
+                    <button class="tab" data-tab="content">Content/Body</button>
+                </div>
+
+                <div id="headersTab" class="tab-content active">
+                    <div id="headersContainer">
+                        <div class="header-row">
+                            <input type="text" placeholder="Header Name" class="header-key">
+                            <input type="text" placeholder="Header Value" class="header-value">
+                        </div>
+                    </div>
+                    <button class="add-btn" id="addHeaderBtn">+ Add</button>
+                </div>
+
+                <div id="contentTab" class="tab-content">
+                    <textarea id="bodyInput" placeholder='{"key": "value"}'></textarea>
+                </div>
+
+                <button class="send-btn" id="sendBtn">
+                    Send Request
+                    <span class="loading hidden" id="loadingSpinner"></span>
+                </button>
+            </div>
+
+            <!-- Response -->
+            <div class="card">
+                <h2 class="card-title">📥 Response</h2>
+
+                <div class="response-status" id="responseStatus">
+                    <span class="status-badge status-info">Ready</span>
+                    <span class="response-time" id="responseTime"></span>
+                </div>
+
+                <div id="responseContainer">
+                    <p style="color: #666; text-align: center; padding: 30px; font-size: 12px;">
+                        Request পাঠান এবং Response দেখুন
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elements
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const methodSelect = document.getElementById('methodSelect');
+        const urlInput = document.getElementById('urlInput');
+        const contentTypeSelect = document.getElementById('contentTypeSelect');
+        const headersContainer = document.getElementById('headersContainer');
+        const bodyInput = document.getElementById('bodyInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const responseStatus = document.getElementById('responseStatus');
+        const responseTime = document.getElementById('responseTime');
+        const responseContainer = document.getElementById('responseContainer');
+        const addHeaderBtn = document.getElementById('addHeaderBtn');
+        const toast = document.getElementById('toast');
+        const zoomSlider = document.getElementById('zoomSlider');
+        const zoomValue = document.getElementById('zoomValue');
+
+        // Settings
+        const uaRandom = document.getElementById('uaRandom');
+        const uaManual = document.getElementById('uaManual');
+        const manualUA = document.getElementById('manualUA');
+        const deviceIdInput = document.getElementById('deviceIdInput');
+        const generateDeviceId = document.getElementById('generateDeviceId');
+
+        // Constants
+        const CORS_PROXY = 'https://corsproxy.io/?';
+        const USER_AGENTS = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Mobile Safari/604.1',
+            'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36'
+        ];
+
+        // ============================================
+        // LocalStorage Functions
+        // ============================================
+        function saveToLocalStorage() {
+            const data = {
+                method: methodSelect.value,
+                url: urlInput.value,
+                contentType: contentTypeSelect.value,
+                body: bodyInput.value,
+                headers: getHeadersData(),
+                userAgent: document.querySelector('input[name="userAgent"]:checked').value,
+                manualUA: manualUA.value,
+                deviceId: deviceIdInput.value,
+                zoom: zoomSlider.value
+            };
+            localStorage.setItem('apiTestData', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('apiTestData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                methodSelect.value = data.method || 'GET';
+                urlInput.value = data.url || '';
+                contentTypeSelect.value = data.contentType || 'application/json';
+                bodyInput.value = data.body || '';
+                
+                // Load headers
+                if (data.headers && data.headers.length > 0) {
+                    headersContainer.innerHTML = '';
+                    data.headers.forEach(header => {
+                        addHeaderRow(header.key, header.value);
+                    });
+                }
+
+                // Load settings
+                if (data.userAgent === 'manual') {
+                    uaManual.checked = true;
+                    manualUA.style.display = 'block';
+                    manualUA.value = data.manualUA || '';
+                } else {
+                    uaRandom.checked = true;
+                }
+                
+                deviceIdInput.value = data.deviceId || '';
+                
+                // Load zoom
+                if (data.zoom) {
+                    zoomSlider.value = data.zoom;
+                    updateZoom(data.zoom);
+                }
+            }
+        }
+
+        function getHeadersData() {
+            const headers = [];
+            const headerRows = headersContainer.querySelectorAll('.header-row');
+            headerRows.forEach(row => {
+                const key = row.querySelector('.header-key').value.trim();
+                const value = row.querySelector('.header-value').value.trim();
+                if (key && value) {
+                    headers.push({ key, value });
+                }
+            });
+            return headers;
+        }
+
+        function addHeaderRow(key = '', value = '') {
+            const headerRow = document.createElement('div');
+            headerRow.className = 'header-row';
+            headerRow.innerHTML = `
+                <input type="text" placeholder="Header Name" class="header-key" value="${key}">
+                <input type="text" placeholder="Header Value" class="header-value" value="${value}">
+                <button class="remove-btn">✕</button>
+            `;
+            headersContainer.appendChild(headerRow);
+            headerRow.querySelector('.remove-btn').addEventListener('click', () => {
+                headerRow.remove();
+                saveToLocalStorage();
+            });
+        }
+
+        // Auto-save on changes
+        [methodSelect, urlInput, contentTypeSelect, bodyInput].forEach(el => {
+            el.addEventListener('change', saveToLocalStorage);
+            el.addEventListener('input', saveToLocalStorage);
+        });
+
+        // ============================================
+        // Zoom Control
+        // ============================================
+        function updateZoom(value) {
+            const scale = value / 100;
+            document.body.style.transform = `scale(${scale})`;
+            zoomValue.textContent = value + '%';
+        }
+
+        zoomSlider.addEventListener('input', (e) => {
+            updateZoom(e.target.value);
+            saveToLocalStorage();
+        });
+
+        // ============================================
+        // Toast
+        // ============================================
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ============================================
+        // Settings Modal
+        // ============================================
+        settingsBtn.addEventListener('click', () => {
+            settingsModal.classList.add('active');
+        });
+
+        closeSettingsBtn.addEventListener('click', () => {
+            settingsModal.classList.remove('active');
+        });
+
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) {
+                settingsModal.classList.remove('active');
+            }
+        });
+
+        // User Agent
+        document.querySelectorAll('input[name="userAgent"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (uaManual.checked) {
+                    manualUA.style.display = 'block';
+                } else {
+                    manualUA.style.display = 'none';
+                }
+                saveToLocalStorage();
+            });
+        });
+
+        manualUA.addEventListener('input', saveToLocalStorage);
+        deviceIdInput.addEventListener('input', saveToLocalStorage);
+
+        // Generate Device ID
+        generateDeviceId.addEventListener('click', () => {
+            const randomId = 'device_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            deviceIdInput.value = randomId;
+            saveToLocalStorage();
+            showToast('✅ Device ID generated!');
+        });
+
+        // ============================================
+        // Tabs
+        // ============================================
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                const parentCard = tab.closest('.card');
+                
+                parentCard.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                parentCard.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const tabContent = parentCard.querySelector(`#${tabName}Tab`);
+                if (tabContent) {
+                    tabContent.classList.add('active');
+                }
+            });
+        });
+
+        // ============================================
+        // Add Header
+        // ============================================
+        addHeaderBtn.addEventListener('click', () => {
+            addHeaderRow();
+            saveToLocalStorage();
+        });
+
+        // ============================================
+        // Get Headers
+        // ============================================
+        function getHeaders() {
+            const headers = {};
+            const headerRows = headersContainer.querySelectorAll('.header-row');
+            
+            headerRows.forEach(row => {
+                const key = row.querySelector('.header-key').value.trim();
+                const value = row.querySelector('.header-value').value.trim();
+                if (key && value) {
+                    headers[key] = value;
+                }
+            });
+
+            // User Agent
+            const ua = uaRandom.checked 
+                ? USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)]
+                : manualUA.value.trim();
+            if (ua) headers['User-Agent'] = ua;
+
+            // Device ID
+            const deviceId = deviceIdInput.value.trim();
+            if (deviceId) headers['X-Device-ID'] = deviceId;
+
+            // Content-Type
+            const body = bodyInput.value.trim();
+            if (body && ['POST', 'PUT', 'PATCH'].includes(methodSelect.value)) {
+                headers['Content-Type'] = contentTypeSelect.value;
+            }
+            
+            return headers;
+        }
+
+        // ============================================
+        // Copy Function
+        // ============================================
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+                showToast('✅ Copied!');
+            });
+        }
+
+        window.copyToClipboard = copyToClipboard;
+
+        // ============================================
+        // Send Request
+        // ============================================
+        sendBtn.addEventListener('click', async () => {
+            const method = methodSelect.value;
+            let url = urlInput.value.trim();
+            
+            if (!url) {
+                showToast('❌ Please enter URL!');
+                return;
+            }
+
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+
+            const headers = getHeaders();
+            const body = bodyInput.value.trim();
+            const finalURL = CORS_PROXY + encodeURIComponent(url);
+
+            const options = {
+                method: method,
+                headers: headers
+            };
+
+            if (['POST', 'PUT', 'PATCH'].includes(method) && body) {
+                options.body = body;
+            }
+
+            sendBtn.disabled = true;
+            loadingSpinner.classList.remove('hidden');
+            
+            responseStatus.innerHTML = `
+                <span class="status-badge status-info">Sending...</span>
+                <span class="response-time"></span>
+            `;
+
+            const startTime = Date.now();
+
+            try {
+                const response = await fetch(finalURL, options);
+                const endTime = Date.now();
+                const duration = endTime - startTime;
+
+                const resHeaders = {};
+                response.headers.forEach((value, key) => {
+                    resHeaders[key] = value;
+                });
+
+                const contentType = response.headers.get('content-type');
+                let resBody;
+                
+                if (contentType && contentType.includes('application/json')) {
+                    try {
+                        resBody = await response.json();
+                    } catch (e) {
+                        resBody = await response.text();
+                    }
+                } else {
+                    resBody = await response.text();
+                }
+
+                const statusClass = response.ok ? 'status-success' : 'status-error';
+                responseStatus.innerHTML = `
+                    <span class="status-badge ${statusClass}">${response.status} ${response.statusText}</span>
+                    <span class="response-time">⏱️ ${duration}ms</span>
+                `;
+
+                // Build Response
+                let requestStr = `Method: ${method}\nURL: ${url}\n\nHeaders:\n${JSON.stringify(headers, null, 2)}`;
+                if (body) {
+                    requestStr += `\n\nBody:\n${body}`;
+                }
+
+                const cookies = resHeaders['set-cookie'] || 'No cookies';
+                const responseStr = typeof resBody === 'object' ? JSON.stringify(resBody, null, 2) : resBody;
+
+                responseContainer.innerHTML = `
+                    <div class="response-box">
+                        <div class="response-section">
+                            <div class="section-title">
+                                📤 Request
+                                <button class="copy-btn" onclick='copyToClipboard(${JSON.stringify(requestStr)}, this)'>📋 Copy</button>
+                            </div>
+                            <div class="section-content">${requestStr}</div>
+                        </div>
+
+                        <div class="response-section">
+                            <div class="section-title">🍪 Cookies</div>
+                            <div class="section-content">${cookies}</div>
+                        </div>
+
+                        <div class="response-section">
+                            <div class="section-title">
+                                📥 Response
+                                <button class="copy-btn" onclick='copyToClipboard(${JSON.stringify(responseStr)}, this)'>📋 Copy</button>
+                            </div>
+                            <div class="section-content">${responseStr}</div>
+                        </div>
+                    </div>
+                `;
+
+                showToast('✅ Request successful!');
+
+            } catch (error) {
+                const endTime = Date.now();
+                const duration = endTime - startTime;
+
+                responseStatus.innerHTML = `
+                    <span class="status-badge status-error">Error</span>
+                    <span class="response-time">⏱️ ${duration}ms</span>
+                `;
+
+                responseContainer.innerHTML = `
+                    <div class="response-box">
+                        <div class="response-section">
+                            <div class="section-title">❌ Error</div>
+                            <div class="section-content">Error: ${error.message}\n\nURL টা ঠিক আছে কিনা চেক করুন।</div>
+                        </div>
+                    </div>
+                `;
+
+                showToast('❌ Request failed!');
+            } finally {
+                sendBtn.disabled = false;
+                loadingSpinner.classList.add('hidden');
+            }
+        });
+
+        // ============================================
+        // Keyboard Shortcut
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                sendBtn.click();
+            }
+        });
+
+        // ============================================
+        // Load on Start
+        // ============================================
+        window.addEventListener('load', () => {
+            loadFromLocalStorage();
+        });
+    </script>
+</body>
+</html>
